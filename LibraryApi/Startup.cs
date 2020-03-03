@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using LibraryApi.Domain;
+using LibraryApi.Mappers;
 using LibraryApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,7 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-
+using AutoMapper;
 namespace LibraryApi
 {
     public class Startup
@@ -31,7 +32,9 @@ namespace LibraryApi
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddTransient<IGenerateEmployeeIds, EmployeeIdGenerator>();
+            services.AddScoped<IMapBooks, EfSqlBookMapper>();
             services.AddControllers();
             services.AddDbContext<LibraryDataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("LibraryDatabase"))
